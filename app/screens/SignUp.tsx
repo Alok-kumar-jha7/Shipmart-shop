@@ -15,21 +15,22 @@ import { Controller, useForm } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
-interface SigninFormData {
+interface SignupFormData {
   email: string;
+  name:string;
   password: string;
 }
 
-const SignIn = () => {
-  const loginForm = useForm<SigninFormData>({
+const SignUp = () => {
+  const signupForm = useForm<SignupFormData>({
     mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
     },
   });
-  const handleSignUpNavigation=()=>{
-    router.push('/screens/SignUp');
+  const handleSignInNavigation=()=>{
+    router.push('/screens/SignIn');
   }
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
@@ -46,20 +47,60 @@ const SignIn = () => {
           {/* Header */}
           <View className="mt-16 mb-8">
             <Text className="text-3xl font-poppins-bold text-gray-900 mb-2">
-              Welcome Back
+              Create Account
             </Text>
             <Text className="text-gray-500 font-poppins text-base mt-2">
-              Sign in to your account
+              Sign up and start shopping today
             </Text>
           </View>
           {/* Form Field */}
           <View className="gap-6 mt-8">
             <View className="mt-4">
+                <Text className="text-gray-800 text-base font-poppins-medium mb-3">
+                    Name
+                </Text>
+                <Controller
+                control={signupForm.control}
+                name="name"
+                rules={{
+                    required:"Name is required",
+                    minLength:{
+                        value:3,
+                        message:'Name should be at least 3 charcters'
+                    },
+                }}
+                render={({
+                    field:{onChange, onBlur,value}
+                })=>(
+                    <View 
+                    className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-2 border
+                        ${signupForm.formState.errors.name ? "border-red-500" : "border-gray-200"}`}
+                        >
+                            <Ionicons name="person-outline" size={20} color={'#9CA3AF'}/>
+                            <TextInput
+                            className="flex-1 ml-3 text-gray-800 font-poppins"
+                            placeholder="Create your name"
+                            placeholderTextColor={"#9CA3AF"}
+                            value={value}
+                            onChangeText={onChange}
+                            onBlur={onBlur}
+                            />
+                            </View>
+                    )}
+                    />
+                    {signupForm.formState.errors.name && (
+                        <Text 
+                        className="text-red-500 text-sm font-poppins mt-1">
+                            {signupForm.formState.errors.name.message}
+                        </Text>
+                    )}
+            </View>
+            <View className="mt-3">
               <Text className="text-gray-800 text-base font-poppins-medium mb-3">
                 Email
               </Text>
               <Controller
-                control={loginForm.control}
+                control={signupForm.control}
                 name="email"
                 rules={{
                   required: "Email is required",
@@ -75,7 +116,7 @@ const SignIn = () => {
                   <>
                     <View
                       className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-2 border 
-                       ${loginForm.formState.errors.email ? "border-red-500" : "border-gray-200"}`}
+                       ${signupForm.formState.errors.email ? "border-red-500" : "border-gray-200"}`}
                     >
                       <Ionicons name="mail-outline" size={20} color="#9CA3AF" />
 
@@ -88,25 +129,25 @@ const SignIn = () => {
                         onBlur={onBlur}
                         keyboardType="email-address"
                         autoCapitalize="none"
-                        // editable={!loginMutation.isPending}
+                        // editable={!signupMutation.isPending}
                       />
                     </View>
 
-                    {loginForm.formState.errors.email && (
+                    {signupForm.formState.errors.email && (
                       <Text className="text-red-500 text-sm font-poppins mt-2">
-                        {loginForm.formState.errors.email.message}
+                        {signupForm.formState.errors.email.message}
                       </Text>
                     )}
                   </>
                 )}
               />
             </View>
-            <View className="mt-4">
+            <View className="mt-3">
               <Text className="text-gray-800 text-base font-poppins-medium mb-2">
                 Password
               </Text>
               <Controller
-                control={loginForm.control}
+                control={signupForm.control}
                 name="password"
                 rules={{
                   required: "Password is required",
@@ -118,7 +159,7 @@ const SignIn = () => {
                   <>
                     <View
                       className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-2 border 
-                   ${loginForm.formState.errors.password ? "border-red-500" : "border-gray-200"}`}
+                   ${signupForm.formState.errors.password? "border-red-500" : "border-gray-200"}`}
                     >
                       <Ionicons
                         name="lock-closed-outline"
@@ -134,12 +175,12 @@ const SignIn = () => {
                         onChangeText={onChange}
                         onBlur={onBlur}
                         secureTextEntry={!showPassword}
-                        // editable={!loginMutation.isPending}
+                        // editable={!signupMutation.isPending}
                       />
 
                       <TouchableOpacity
                         onPress={() => setShowPassword(!showPassword)}
-                        // disabled={!loginMutation.isPending}
+                        // disabled={!signupMutation.isPending}
                       >
                         <Ionicons
                           name={
@@ -151,9 +192,9 @@ const SignIn = () => {
                       </TouchableOpacity>
                     </View>
 
-                    {loginForm.formState.errors.password && (
+                    {signupForm.formState.errors.password && (
                       <Text className="text-red-500 text-sm font-poppins mt-2">
-                        {loginForm.formState.errors.password.message}
+                        {signupForm.formState.errors.password.message}
                       </Text>
                     )}
                   </>
@@ -163,7 +204,7 @@ const SignIn = () => {
             <TouchableOpacity
               className="self-end"
               onPress={() => router.push("/(routes)/ForgotPassword")}
-              // disabled={loginMutation.isPending}
+              // disabled={signupMutation.isPending}
             >
               <Text className="text-blue-600 font-poppins-medium">
                 Forgot Password?
@@ -173,14 +214,14 @@ const SignIn = () => {
           {/* Submit Button */}
           <TouchableOpacity
             className={`rounded-xl py-5 mt-6 ${
-              loginForm.formState.isValid ? "bg-blue-600" : "bg-gray-300"
+              signupForm.formState.isValid ? "bg-blue-600" : "bg-gray-300"
             }`}
-            //  onPress={loginForm.handleSubmit(onLoginSubmit)}
-            //  disabled={!loginForm.formState.isValid || loginMutation.isPending}
+            //  onPress={signupForm.handleSubmit(onSignupSubmit)}
+            //  disabled={!signupForm.formState.isValid || signupMutation.isPending}
           >
             <Text className="text-white text-lg font-poppins-semibold text-center ">
-              {"Sign In"}
-              {/* loginMutation.isPending ? "Signing In..." :  */}
+              {"Sign Up"}
+              {/* signupMutation.isPending ? "Signing Up..." :  */}
             </Text>
           </TouchableOpacity>
           {/* Divider */}
@@ -192,10 +233,10 @@ const SignIn = () => {
             <View className="flex-1 h-px bg-gray-300" />
           </View>
           {/* Social login Buttons */}
-          <View className="space-y-4 mb-4">
+          <View className="space-y-4">
             <TouchableOpacity
               className="flex-row items-center mb-4 justify-center bg-white border border-gray-300 rounded-xl py-4"
-              // disabled={loginMutation.isPending}
+              // disabled={signupMutation.isPending}
             >
               <View className="w-6 h-6 mr-3">
                 <Image
@@ -213,7 +254,7 @@ const SignIn = () => {
 
              <TouchableOpacity
               className="flex-row items-center mb-4 justify-center bg-white border border-gray-300 rounded-xl py-4"
-              // disabled={loginMutation.isPending}
+              // disabled={signupMutation.isPending}
             >
               <Ionicons
               name="logo-facebook"
@@ -227,16 +268,16 @@ const SignIn = () => {
             </TouchableOpacity>
           </View>
 
-          <View className="flex-row justify-center mb-10">
+          <View className="flex-row justify-center mb-8">
             <Text className="text-gray-600 font-poppins">
-              Don&apos;t have an account?{' '}
+              Already have an account?{' '}
             </Text>
             <TouchableOpacity 
-            onPress={handleSignUpNavigation}
-            // disabled={loginMutation.isPending}
+            // onPress={handleSignInNavigation}
+            // disabled={signupMutation.isPending}
             >
               <Text className="text-blue-600 font-poppins-semibold">
-                Sign Up
+                Sign In
               </Text>
             </TouchableOpacity>
           </View>
@@ -246,4 +287,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;
