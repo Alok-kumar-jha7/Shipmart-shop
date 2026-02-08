@@ -17,7 +17,7 @@ import { useRouter } from "expo-router";
 
 interface SignupFormData {
   email: string;
-  name:string;
+  name: string;
   password: string;
 }
 
@@ -29,9 +29,9 @@ const SignUp = () => {
       password: "",
     },
   });
-  const handleSignInNavigation=()=>{
-    router.push('/screens/SignIn');
-  }
+  const handleSignInNavigation = () => {
+    router.push("/screens/SignIn");
+  };
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   return (
@@ -56,44 +56,45 @@ const SignUp = () => {
           {/* Form Field */}
           <View className="gap-6 mt-8">
             <View className="mt-4">
-                <Text className="text-gray-800 text-base font-poppins-medium mb-3">
-                    Name
-                </Text>
-                <Controller
+              <Text className="text-gray-800 text-base font-poppins-medium mb-3">
+                Name
+              </Text>
+              <Controller
                 control={signupForm.control}
                 name="name"
                 rules={{
-                    required:"Name is required",
-                    minLength:{
-                        value:3,
-                        message:'Name should be at least 3 charcters'
-                    },
+                  required: "Name is required",
+                  minLength: {
+                    value: 3,
+                    message: "Name should be at least 3 charcters",
+                  },
                 }}
-                render={({
-                    field:{onChange, onBlur,value}
-                })=>(
-                    <View 
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <View
                     className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-2 border
                         ${signupForm.formState.errors.name ? "border-red-500" : "border-gray-200"}`}
-                        >
-                            <Ionicons name="person-outline" size={20} color={'#9CA3AF'}/>
-                            <TextInput
-                            className="flex-1 ml-3 text-gray-800 font-poppins"
-                            placeholder="Create your name"
-                            placeholderTextColor={"#9CA3AF"}
-                            value={value}
-                            onChangeText={onChange}
-                            onBlur={onBlur}
-                            />
-                            </View>
-                    )}
+                  >
+                    <Ionicons
+                      name="person-outline"
+                      size={20}
+                      color={"#9CA3AF"}
                     />
-                    {signupForm.formState.errors.name && (
-                        <Text 
-                        className="text-red-500 text-sm font-poppins mt-1">
-                            {signupForm.formState.errors.name.message}
-                        </Text>
-                    )}
+                    <TextInput
+                      className="flex-1 ml-3 text-gray-800 font-poppins"
+                      placeholder="Create your name"
+                      placeholderTextColor={"#9CA3AF"}
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                    />
+                  </View>
+                )}
+              />
+              {signupForm.formState.errors.name && (
+                <Text className="text-red-500 text-sm font-poppins mt-1">
+                  {signupForm.formState.errors.name.message}
+                </Text>
+              )}
             </View>
             <View className="mt-3">
               <Text className="text-gray-800 text-base font-poppins-medium mb-3">
@@ -159,7 +160,7 @@ const SignUp = () => {
                   <>
                     <View
                       className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-2 border 
-                   ${signupForm.formState.errors.password? "border-red-500" : "border-gray-200"}`}
+                   ${signupForm.formState.errors.password ? "border-red-500" : "border-gray-200"}`}
                     >
                       <Ionicons
                         name="lock-closed-outline"
@@ -252,15 +253,15 @@ const SignUp = () => {
               </Text>
             </TouchableOpacity>
 
-             <TouchableOpacity
+            <TouchableOpacity
               className="flex-row items-center mb-4 justify-center bg-white border border-gray-300 rounded-xl py-4"
               // disabled={signupMutation.isPending}
             >
               <Ionicons
-              name="logo-facebook"
-              size={24}
-              color="#1877f2"
-              className="mr-3"
+                name="logo-facebook"
+                size={24}
+                color="#1877f2"
+                className="mr-3"
               />
               <Text className="text-gray-800 text-base font-poppins-medium">
                 Sign in with Facebook
@@ -268,14 +269,12 @@ const SignUp = () => {
             </TouchableOpacity>
           </View>
 
-          <View className="flex-row justify-center mb-8">
+          <View className="flex-row justify-center mt-6 mb-8">
             <Text className="text-gray-600 font-poppins">
-              Already have an account?{' '}
+              Already have an account?{" "}
             </Text>
-            <TouchableOpacity 
-            // onPress={handleSignInNavigation}
-            // disabled={signupMutation.isPending}
-            >
+
+            <TouchableOpacity onPress={handleSignInNavigation}>
               <Text className="text-blue-600 font-poppins-semibold">
                 Sign In
               </Text>
