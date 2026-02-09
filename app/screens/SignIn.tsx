@@ -44,7 +44,7 @@ const SignIn = () => {
           showsVerticalScrollIndicator={false}
         >
           {/* Header */}
-          <View className="mt-16 mb-8">
+          <View className="mt-10 mb-6">
             <Text className="text-3xl font-poppins-bold text-gray-900 mb-2">
               Welcome Back
             </Text>
@@ -53,7 +53,7 @@ const SignIn = () => {
             </Text>
           </View>
           {/* Form Field */}
-          <View className="gap-6 mt-8">
+          <View className="gap-6 mt-6">
             <View className="mt-4">
               <Text className="text-gray-800 text-base font-poppins-medium mb-3">
                 Email
@@ -70,7 +70,7 @@ const SignIn = () => {
                 }}
                 render={({
                   field: { onChange, onBlur, value },
-                  fieldState: { error },
+                
                 }) => (
                   <>
                     <View
@@ -113,7 +113,7 @@ const SignIn = () => {
                 }}
                 render={({
                   field: { onChange, onBlur, value },
-                  fieldState: { error },
+                  
                 }) => (
                   <>
                     <View

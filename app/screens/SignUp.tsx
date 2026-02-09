@@ -45,7 +45,7 @@ const SignUp = () => {
           showsVerticalScrollIndicator={false}
         >
           {/* Header */}
-          <View className="mt-16 mb-8">
+          <View className="mt-10 mb-6">
             <Text className="text-3xl font-poppins-bold text-gray-900 mb-2">
               Create Account
             </Text>
@@ -54,7 +54,7 @@ const SignUp = () => {
             </Text>
           </View>
           {/* Form Field */}
-          <View className="gap-6 mt-8">
+          <View className="gap-4 mt-6">
             <View className="mt-4">
               <Text className="text-gray-800 text-base font-poppins-medium mb-3">
                 Name
@@ -112,7 +112,7 @@ const SignUp = () => {
                 }}
                 render={({
                   field: { onChange, onBlur, value },
-                  fieldState: { error },
+                 
                 }) => (
                   <>
                     <View
@@ -143,7 +143,7 @@ const SignUp = () => {
                 )}
               />
             </View>
-            <View className="mt-3">
+            <View className="mt-3 mb-4">
               <Text className="text-gray-800 text-base font-poppins-medium mb-2">
                 Password
               </Text>
@@ -155,7 +155,7 @@ const SignUp = () => {
                 }}
                 render={({
                   field: { onChange, onBlur, value },
-                  fieldState: { error },
+                 
                 }) => (
                   <>
                     <View
@@ -202,15 +202,7 @@ const SignUp = () => {
                 )}
               />
             </View>
-            <TouchableOpacity
-              className="self-end"
-              onPress={() => router.push("/(routes)/ForgotPassword")}
-              // disabled={signupMutation.isPending}
-            >
-              <Text className="text-blue-600 font-poppins-medium">
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
+          
           </View>
           {/* Submit Button */}
           <TouchableOpacity
