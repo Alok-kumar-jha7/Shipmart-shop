@@ -3,10 +3,6 @@
 # dependencies
 node_modules/
 
-# local env files
-.env
-.env*.local
-
 # Expo
 .expo/
 dist/
@@ -26,13 +22,16 @@ expo-env.d.ts
 .metro-health-check*
 
 # debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+npm-debug.*
+yarn-debug.*
+yarn-error.*
 
 # macOS
 .DS_Store
 *.pem
+
+# local env files
+.env*.local
 
 # typescript
 *.tsbuildinfo
@@ -42,3 +41,5 @@ app-example
 # generated native folders
 /ios
 /android
+node_modules
+.env
