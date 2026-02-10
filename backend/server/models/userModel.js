@@ -21,19 +21,12 @@ const userSchema = new mongoose.Schema({
       required: true,
       minlength: [6,"Password should be at least 6 characters."],
       maxlength:[26,"password can not exceed 26 characters."],
+      select:false,
     },
     phone:{
         type:String,
-        requqired:[true,"Phone number is required"],
+        required :[true,"Phone number is required"],
         unique:true,
-    },
-    isVerified:{
-       type:Boolean,
-       default:false,
-       verificationCode:Number,
-       verificationCodeExpires:Date,
-       resetPasswordToken:String,
-       resetPasswordExpires:Date,
     },
     
 

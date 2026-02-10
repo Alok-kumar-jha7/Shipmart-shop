@@ -1,19 +1,32 @@
-import errorHandler from "../middlewares/error.js";
 import { catchAsyncError } from "../middlewares/catchAsyncError";
 import { User } from "../models/userModel.js";
+import ErrorHandler from "../middlewares/error.js";
 
 export const  registerUser = catchAsyncError(async(req,res,next)=>{
-     try {
-        const {name,email,password,phone,isVerified} = req.body;
-        if(!name||!email||!password||!phone||!isVerified){
-            return next(new errorHandler("Please fill all the fields",400));
+    
+        const {name,email,password,phone} = req.body;
+        if(!name || !email || !password || !phone){
+            return next(new ErrorHandler("Please fill all the fields",400));
         }
         function validatePhoneNumber(phone){
-            const phoneResgex = /^+91\d{10}$/;
-            return phoneResgex.test(phone);
+            const phoneRegex = /^\+91\d{10}$/;
+            return phoneRegex.test(phone);
 
         }
-     } catch (error) {
-        
-     }
+
+        if(!validatePhoneNumber(phone)){
+            return next(new ErrorHandler("Invalid phone number",400));
+        }
+
+        const existingUser = await User.findOne({ $or: [{ email }, { phone }]});
+        if(existingUser){
+            return next(new ErrorHandler("User already exists",400));
+        }
+
+        const RegisteredUser = await User.create({
+            name,email,password,phone
+        }); 
+       
+
+    
 })
