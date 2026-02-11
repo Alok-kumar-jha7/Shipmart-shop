@@ -68,7 +68,7 @@ const SignUp = () => {
     mutationFn:signupUser,
     onSuccess:(data,variables)=>{
       router.replace({
-        pathname:"/(routes)/SignupOtp",
+        pathname:"/(routes)/Signup-Otp",
         params:{
           name:variables.name,
           phone:variables.phone,
@@ -82,6 +82,9 @@ const SignUp = () => {
       toast.error(error?.message);
     }
   })
+  const onSignupSubmit = (data:SignupFormData) =>{
+    signupMutation.mutate(data)
+  }
   const handleSignInNavigation = () => {
     router.push("/screens/SignIn");
   };
@@ -138,6 +141,7 @@ const SignUp = () => {
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
+                      
                     />
                   </View>
                 )}
@@ -184,6 +188,7 @@ const SignUp = () => {
                         onBlur={onBlur}
                         keyboardType="number-pad"
                         maxLength={10}
+                        editable={!signupMutation.isPending}
                       />
                     </View>
 
@@ -228,7 +233,7 @@ const SignUp = () => {
                         onBlur={onBlur}
                         keyboardType="email-address"
                         autoCapitalize="none"
-                        // editable={!signupMutation.isPending}
+                        editable={!signupMutation.isPending}
                       />
                     </View>
 
@@ -271,12 +276,12 @@ const SignUp = () => {
                         onChangeText={onChange}
                         onBlur={onBlur}
                         secureTextEntry={!showPassword}
-                        // editable={!signupMutation.isPending}
+                        editable={!signupMutation.isPending}
                       />
 
                       <TouchableOpacity
                         onPress={() => setShowPassword(!showPassword)}
-                        // disabled={!signupMutation.isPending}
+                        disabled={!signupMutation.isPending}
                       >
                         <Ionicons
                           name={
@@ -303,12 +308,12 @@ const SignUp = () => {
             className={`rounded-xl py-5 mt-6 ${
               signupForm.formState.isValid ? "bg-blue-600" : "bg-gray-300"
             }`}
-            //  onPress={signupForm.handleSubmit(onSignupSubmit)}
-            //  disabled={!signupForm.formState.isValid || signupMutation.isPending}
+             onPress={signupForm.handleSubmit(onSignupSubmit)}
+             disabled={!signupForm.formState.isValid || signupMutation.isPending}
           >
             <Text className="text-white text-lg font-poppins-semibold text-center ">
-              {"Sign Up"}
-              {/* signupMutation.isPending ? "Signing Up..." :  */}
+              { signupMutation.isPending ? "Creating Account..." : "Sign up"}
+             
             </Text>
           </TouchableOpacity>
           {/* Divider */}
@@ -323,7 +328,7 @@ const SignUp = () => {
           <View className="space-y-4">
             <TouchableOpacity
               className="flex-row items-center mb-4 justify-center bg-white border border-gray-300 rounded-xl py-4"
-              // disabled={signupMutation.isPending}
+              disabled={signupMutation.isPending}
             >
               <View className="w-6 h-6 mr-3">
                 <Image
@@ -341,7 +346,7 @@ const SignUp = () => {
 
             <TouchableOpacity
               className="flex-row items-center mb-4 justify-center bg-white border border-gray-300 rounded-xl py-4"
-              // disabled={signupMutation.isPending}
+              disabled={signupMutation.isPending}
             >
               <Ionicons
                 name="logo-facebook"
