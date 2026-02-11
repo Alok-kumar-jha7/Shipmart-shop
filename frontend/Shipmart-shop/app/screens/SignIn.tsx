@@ -28,9 +28,9 @@ const SignIn = () => {
       password: "",
     },
   });
-  const handleSignUpNavigation=()=>{
-    router.push('/screens/SignUp');
-  }
+  const handleSignUpNavigation = () => {
+    router.push("/screens/SignUp");
+  };
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   return (
@@ -68,10 +68,7 @@ const SignIn = () => {
                     message: "Please enter a valid email",
                   },
                 }}
-                render={({
-                  field: { onChange, onBlur, value },
-                
-                }) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <>
                     <View
                       className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-2 border 
@@ -111,10 +108,7 @@ const SignIn = () => {
                 rules={{
                   required: "Password is required",
                 }}
-                render={({
-                  field: { onChange, onBlur, value },
-                  
-                }) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <>
                     <View
                       className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-2 border 
@@ -211,15 +205,15 @@ const SignIn = () => {
               </Text>
             </TouchableOpacity>
 
-             <TouchableOpacity
+            <TouchableOpacity
               className="flex-row items-center mb-4 justify-center bg-white border border-gray-300 rounded-xl py-4"
               // disabled={loginMutation.isPending}
             >
               <Ionicons
-              name="logo-facebook"
-              size={24}
-              color="#1877f2"
-              className="mr-3"
+                name="logo-facebook"
+                size={24}
+                color="#1877f2"
+                className="mr-3"
               />
               <Text className="text-gray-800 text-base font-poppins-medium">
                 Sign in with Facebook
@@ -229,11 +223,11 @@ const SignIn = () => {
 
           <View className="flex-row justify-center mb-10">
             <Text className="text-gray-600 font-poppins">
-              Don&apos;t have an account?{' '}
+              Don&apos;t have an account?{" "}
             </Text>
-            <TouchableOpacity 
-            onPress={handleSignUpNavigation}
-            // disabled={loginMutation.isPending}
+            <TouchableOpacity
+              onPress={handleSignUpNavigation}
+              // disabled={loginMutation.isPending}
             >
               <Text className="text-blue-600 font-poppins-semibold">
                 Sign Up

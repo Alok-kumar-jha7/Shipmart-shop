@@ -1,4 +1,4 @@
-import { catchAsyncError } from "../middlewares/catchAsyncError";
+import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import { User } from "../models/userModel.js";
 import ErrorHandler from "../middlewares/error.js";
 
@@ -9,7 +9,7 @@ export const  registerUser = catchAsyncError(async(req,res,next)=>{
             return next(new ErrorHandler("Please fill all the fields",400));
         }
         function validatePhoneNumber(phone){
-            const phoneRegex = /^\+91\d{10}$/;
+            const phoneRegex = /^\d{10}$/;
             return phoneRegex.test(phone);
 
         }

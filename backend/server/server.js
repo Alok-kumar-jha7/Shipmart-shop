@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { applyMiddleware } from "./middlewares/index.js";
 import { connectToDatabase } from "./database/dbconnection.js";
 import { errorMiddleware } from "./middlewares/error.js";
+import router from "./routes/authRoutes.js"
 
 dotenv.config();
 
@@ -10,9 +11,7 @@ const app = express();
 
 applyMiddleware(app);
 
-// ROUTES YAHAN AAYENGE
-// app.use("/api/auth", authRoutes);
-
+ app.use("/auth/api", router);
 app.use(errorMiddleware);
 
 
@@ -21,8 +20,8 @@ const startServer = async () => {
 
     await connectToDatabase();
 
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+    app.listen(process.env.PORT, () => {
+      console.log(`Server running on port ${process.env.PORT}`);
     });
 
   } catch (error) {

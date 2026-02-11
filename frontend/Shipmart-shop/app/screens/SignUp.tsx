@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Controller, useForm } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { toast } from "sonner-native";
 import { useMutation } from "@tanstack/react-query";
 
@@ -29,7 +29,9 @@ const SignUp = () => {
   const signupForm = useForm<SignupFormData>({
     mode: "onChange",
     defaultValues: {
+      name:"",
       email: "",
+      phone:"",
       password: "",
     },
   });
@@ -41,7 +43,7 @@ const SignUp = () => {
       );
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         if (!error.response) {
           throw new Error(
             "Network error. Please check your connection and try again.",
@@ -75,11 +77,12 @@ const SignUp = () => {
           email:variables.email,
           password:variables.password,
           
-        }
+        },
       })
     },
     onError :(error:Error)=>{
       toast.error(error?.message);
+      console.log(error);
     }
   })
   const onSignupSubmit = (data:SignupFormData) =>{
@@ -90,12 +93,14 @@ const SignUp = () => {
   };
   const [showPassword, setShowPassword] = useState(false);
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white" >
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
       >
-        <ScrollView
+        <ScrollView 
+        bounces={false}
+        overScrollMode="never"
           className="flex-1 px-6"
           showsVerticalScrollIndicator={false}
         >
@@ -136,7 +141,7 @@ const SignUp = () => {
                     />
                     <TextInput
                       className="flex-1 ml-3 text-gray-800 font-poppins"
-                      placeholder="Create your name"
+                      placeholder="Enter your name"
                       placeholderTextColor={"#9CA3AF"}
                       value={value}
                       onChangeText={onChange}
@@ -281,7 +286,7 @@ const SignUp = () => {
 
                       <TouchableOpacity
                         onPress={() => setShowPassword(!showPassword)}
-                        disabled={!signupMutation.isPending}
+                        disabled={signupMutation.isPending}
                       >
                         <Ionicons
                           name={
