@@ -23,10 +23,14 @@ export const  registerUser = catchAsyncError(async(req,res,next)=>{
             return next(new ErrorHandler("User already exists",400));
         }
 
-        const RegisteredUser = await User.create({
+        const RegisterNewUser = await User.create({
             name,email,password,phone
         }); 
-       
-
+        await RegisterNewUser.save();
+         res.status(201).json({
+        success: true,
+        message: "User registered successfully",
+        user:RegisterNewUser,
+    });
     
 })

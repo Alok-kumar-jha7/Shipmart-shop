@@ -2,7 +2,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  StyleSheet,
   Text,
   View,
   TextInput,
@@ -14,6 +13,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Controller, useForm } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import axios from "axios";
+import { toast } from "sonner-native";
+import { useMutation } from "@tanstack/react-query";
 
 interface SignupFormData {
   email: string;
@@ -23,6 +25,7 @@ interface SignupFormData {
 }
 
 const SignUp = () => {
+    const router = useRouter();
   const signupForm = useForm<SignupFormData>({
     mode: "onChange",
     defaultValues: {
@@ -30,11 +33,59 @@ const SignUp = () => {
       password: "",
     },
   });
+  const signupUser = async (userData: SignupFormData) => {
+    try {
+      const response = await axios.post(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/api/user-registration`,
+        userData,
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (!error.response) {
+          throw new Error(
+            "Network error. Please check your connection and try again.",
+          );
+
+        }
+        const statusCode = error?.response?.status;
+        const errorData = error?.response?.data;
+
+        if(statusCode===400 || statusCode===422){
+          toast.error(errorData?.message||"Invalid input data")
+        }else if (statusCode===409){
+          toast.error(errorData?.message||"User already exists with this email");
+        }else if(statusCode>=500){
+          toast.error(errorData?.message||"Server error.Please try again later!");
+        }else{
+          toast.error(errorData?.message||"Sign up failed!");
+        }
+      }
+      toast.error("An unexpected expected error occured")
+    }
+  };
+  const signupMutation = useMutation({
+    mutationFn:signupUser,
+    onSuccess:(data,variables)=>{
+      router.replace({
+        pathname:"/(routes)/SignupOtp",
+        params:{
+          name:variables.name,
+          phone:variables.phone,
+          email:variables.email,
+          password:variables.password,
+          
+        }
+      })
+    },
+    onError :(error:Error)=>{
+      toast.error(error?.message);
+    }
+  })
   const handleSignInNavigation = () => {
     router.push("/screens/SignIn");
   };
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
   return (
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
@@ -98,53 +149,53 @@ const SignUp = () => {
               )}
             </View>
             <View className="mt-3">
-  <Text className="text-gray-800 text-base font-poppins-medium mb-3">
-    Phone Number
-  </Text>
+              <Text className="text-gray-800 text-base font-poppins-medium mb-3">
+                Phone Number
+              </Text>
 
-  <Controller
-    control={signupForm.control}
-    name="phone"
-    rules={{
-      required: "Phone number is required",
-      pattern: {
-        value: /^[0-9]{10}$/,
-        message: "Please enter valid 10 digit number",
-      },
-    }}
-    render={({ field: { onChange, onBlur, value } }) => (
-      <>
-        <View
-          className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-2 border
+              <Controller
+                control={signupForm.control}
+                name="phone"
+                rules={{
+                  required: "Phone number is required",
+                  pattern: {
+                    value: /^[0-9]{10}$/,
+                    message: "Please enter valid 10 digit number",
+                  },
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <View
+                      className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-2 border
           ${
             signupForm.formState.errors.phone
               ? "border-red-500"
               : "border-gray-200"
           }`}
-        >
-          <Ionicons name="call-outline" size={20} color="#9CA3AF" />
+                    >
+                      <Ionicons name="call-outline" size={20} color="#9CA3AF" />
 
-          <TextInput
-            className="flex-1 ml-3 text-gray-800 font-poppins"
-            placeholder="Enter your phone number"
-            placeholderTextColor="#9CA3AF"
-            value={value}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            keyboardType="number-pad"
-            maxLength={10}
-          />
-        </View>
+                      <TextInput
+                        className="flex-1 ml-3 text-gray-800 font-poppins"
+                        placeholder="Enter your phone number"
+                        placeholderTextColor="#9CA3AF"
+                        value={value}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        keyboardType="number-pad"
+                        maxLength={10}
+                      />
+                    </View>
 
-        {signupForm.formState.errors.phone && (
-          <Text className="text-red-500 text-sm font-poppins mt-2">
-            {signupForm.formState.errors.phone.message}
-          </Text>
-        )}
-      </>
-    )}
-  />
-</View>
+                    {signupForm.formState.errors.phone && (
+                      <Text className="text-red-500 text-sm font-poppins mt-2">
+                        {signupForm.formState.errors.phone.message}
+                      </Text>
+                    )}
+                  </>
+                )}
+              />
+            </View>
 
             <View className="mt-3">
               <Text className="text-gray-800 text-base font-poppins-medium mb-3">
@@ -160,10 +211,7 @@ const SignUp = () => {
                     message: "Please enter a valid email",
                   },
                 }}
-                render={({
-                  field: { onChange, onBlur, value },
-                 
-                }) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <>
                     <View
                       className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-2 border 
@@ -203,10 +251,7 @@ const SignUp = () => {
                 rules={{
                   required: "Password is required",
                 }}
-                render={({
-                  field: { onChange, onBlur, value },
-                 
-                }) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <>
                     <View
                       className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-2 border 
@@ -252,7 +297,6 @@ const SignUp = () => {
                 )}
               />
             </View>
-          
           </View>
           {/* Submit Button */}
           <TouchableOpacity
