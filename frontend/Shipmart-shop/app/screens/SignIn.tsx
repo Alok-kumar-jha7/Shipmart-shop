@@ -29,7 +29,7 @@ const SignIn = () => {
     },
   });
   const handleSignUpNavigation = () => {
-    router.push("/screens/SignUp");
+    router.push("/(routes)/Signup-Otp");
   };
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
