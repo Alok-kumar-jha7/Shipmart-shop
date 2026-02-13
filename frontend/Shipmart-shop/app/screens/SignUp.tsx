@@ -54,16 +54,16 @@ const SignUp = () => {
         const errorData = error?.response?.data;
 
         if(statusCode===400 || statusCode===422){
-          toast.error(errorData?.message||"Invalid input data")
+          throw new Error(errorData?.message||"Invalid input data")
         }else if (statusCode===409){
-          toast.error(errorData?.message||"User already exists with this email");
+          throw new Error(errorData?.message||"User already exists with this email");
         }else if(statusCode>=500){
-          toast.error(errorData?.message||"Server error.Please try again later!");
+          throw new Error(errorData?.message||"Server error.Please try again later!");
         }else{
-          toast.error(errorData?.message||"Sign up failed!");
+          throw new Error(errorData?.message||"Sign up failed!");
         }
       }
-      toast.error("An unexpected expected error occured")
+      throw new Error("An unexpected expected error occured")
     }
   };
   const signupMutation = useMutation({

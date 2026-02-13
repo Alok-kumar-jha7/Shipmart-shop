@@ -26,11 +26,13 @@ export const  registerUser = catchAsyncError(async(req,res,next)=>{
         const RegisterNewUser = await User.create({
             name,email,password,phone
         }); 
-        await RegisterNewUser.save();
+       
          res.status(201).json({
         success: true,
         message: "User registered successfully",
         user:RegisterNewUser,
     });
+    console.log("next:", typeof next);
+
     
 })

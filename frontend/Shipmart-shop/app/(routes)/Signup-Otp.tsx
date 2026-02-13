@@ -107,23 +107,23 @@ export default function SignUpOtp() {
         const errorData = error?.response?.data;
 
         if (statusCode === 400 || statusCode === 422) {
-          toast.error(errorData?.message || "Invalid OTP of signup data");
+          throw new Error(errorData?.message || "Invalid OTP of signup data");
         } else if (statusCode === 404) {
-          toast.error(errorData?.message || "OTP expired or not found");
+          throw new Error(errorData?.message || "OTP expired or not found");
         } else if (statusCode === 409) {
-          toast.error(
+          throw new Error(
             errorData?.message || "User already exists with this email",
           );
         } else if (statusCode === 429) {
-          toast.error(
+          throw new Error(
             errorData?.message || "Too many attempts. Please try again later.",
           );
         } else if (statusCode >= 500) {
-          toast.error(
+          throw new Error(
             errorData?.message || "Server error.Please try again later!",
           );
         } else {
-          toast.error(errorData?.message || "OTP verifiacation failed!");
+          throw new Error(errorData?.message || "OTP verifiacation failed!");
         }
       }
     }
@@ -149,18 +149,18 @@ export default function SignUpOtp() {
         const errorData = error?.response?.data;
 
         if (statusCode === 400 || statusCode === 422) {
-          toast.error(errorData?.message || "Invalid email address");
+          throw new Error(errorData?.message || "Invalid email address");
         } else if (statusCode === 429) {
-          toast.error(
+          throw new Error(
             errorData?.message ||
               "Too many requests. Please wait before requesting again",
           );
         } else if (statusCode >= 500) {
-          toast.error(
+          throw new Error(
             errorData?.message || "Server error.Please try again later!",
           );
         } else {
-          toast.error(errorData?.message || "Failed to resend OTP");
+          throw new Error(errorData?.message || "Failed to resend OTP");
         }
       }
       throw new Error("An unexpected error occured");

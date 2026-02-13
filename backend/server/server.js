@@ -10,6 +10,7 @@ dotenv.config();
 const app = express();
 
 applyMiddleware(app);
+app.use(express.json({limit:"10mb"}));
 
  app.use("/auth/api", router);
 app.use(errorMiddleware);
