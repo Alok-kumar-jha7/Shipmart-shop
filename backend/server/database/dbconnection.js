@@ -6,7 +6,7 @@ export const connectToDatabase = async () => {
       dbName: "SHIPMART_AUTHENTICATION",
     });
 
-    console.log("MongoDB Connected:", conn.connection.host);
+    console.log("MongoDB Connected:");
   } catch (error) {
     console.log("MongoDB Error:", error.message);
     process.exit(1);

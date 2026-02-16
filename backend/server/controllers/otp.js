@@ -18,11 +18,11 @@ export const verifyOtp = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("User not found", 404));
   }
 
-  if (user.verificationExpire < Date.now()) {
+  if (user.otpExpires < Date.now()) {
     return next(new ErrorHandler("OTP expired", 400));
   }
 
-  if (user.verificationCode !== otp) {
+  if (user.otp !== otp) {
     return next(new ErrorHandler("Invalid OTP", 400));
   }
 
@@ -38,7 +38,8 @@ export const verifyOtp = catchAsyncError(async (req, res, next) => {
   });
 });
 
-//  RESEND OTP
+// RESEND OTP
+
 export const resendOtp = catchAsyncError(async (req, res, next) => {
   const { email } = req.body;
 

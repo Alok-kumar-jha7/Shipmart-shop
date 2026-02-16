@@ -16,9 +16,7 @@ export const registerUser = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("User already exists", 400));
   }
 
-  const otp = Math.floor(1000 + Math.random() * 9000).toString();
-console.log("EMAIL:", process.env.EMAIL);
-console.log("PASS:", process.env.EMAIL_PASS);
+  const otp = Math.floor(1000 + Math.random() * 9000).toString();24
 
   const user = await User.create({
     name,
