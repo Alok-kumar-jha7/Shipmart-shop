@@ -84,7 +84,7 @@ const SignUp = () => {
     },
     onError: (error: Error) => {
       toast.error(error?.message);
-      console.log("hey this is signup:",error);
+      console.log("hey this is signup:", error);
     },
   });
   const onSignupSubmit = (data: SignupFormData) => {
@@ -312,7 +312,9 @@ const SignUp = () => {
           {/* Submit Button */}
           <TouchableOpacity
             className={`rounded-xl py-5 mt-6 ${
-              signupForm.formState.isValid ? "bg-blue-600" : "bg-gray-300"
+              signupForm.formState.isValid && !signupMutation.isPending
+                ? "bg-blue-600"
+                : "bg-gray-300"
             }`}
             onPress={signupForm.handleSubmit(onSignupSubmit)}
             disabled={!signupForm.formState.isValid || signupMutation.isPending}

@@ -2,7 +2,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  StyleSheet,
   Text,
   View,
   TextInput,
@@ -18,44 +17,62 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner-native";
 import axios, { isAxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
-import {storeAccessToken} from "../../utils/axiosInstance"
-
+import { storeAccessToken } from "../../utils/axiosInstance";
 
 interface SigninFormData {
   email: string;
   password: string;
 }
 
-const loginUser = async (userData:SigninFormData) =>{
-  try{
+const loginUser = async (userData: SigninFormData) => {
+  try {
     const response = await axios.post(
-      `${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/api/login-user`,userData);
+      `${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/api/login-user`,
+      userData,
+    );
+    console.log("Backend response:", response.data);
     return response.data;
-  }
-  catch(err){
-    if(isAxiosError(err)){
-      if(!err.response){
-        throw new Error("Network error. Please check your internet connection.")
+  } catch (err) {
+    if (isAxiosError(err)) {
+      if (!err.response) {
+        throw new Error(
+          "Network error. Please check your internet connection.",
+        );
       }
-      const status = err.response.status;
-      const errorData = err.response.data;
-      if(status===400||status===422){
-        throw new Error(errorData?.message||"Invalid request. Please check your input and try again.");
-      }else if(status ===401){
-        throw new Error(errorData?.message || "Invalid credentials. Please check your email and password ");  
-      }else if(status===404){
-        throw new Error(errorData?.message || "Requested page not found. Please contact support.");
-      }else if(status===429){
-        throw new Error(errorData?.message ||"Too many login attempts. Please wait a few minutes and try again.");
-      }else if(status>=500){
-        throw new Error(errorData?.message ||"We are experiencing technical issues. Please try again in a few minutes.");
-      }else{
-        throw new Error(errorData?.message||"Sign IN failed")
+      const status = err?.response?.status;
+      const errorData = err?.response?.data;
+      if (status === 400 || status === 422) {
+        throw new Error(
+          errorData?.message ||
+            "Invalid request. Please check your input and try again.",
+        );
+      } else if (status === 401) {
+        throw new Error(
+          errorData?.message ||
+            "Invalid credentials. Please check your email and password ",
+        );
+      } else if (status === 404) {
+        throw new Error(
+          errorData?.message ||
+            "Requested page not found. Please contact support.",
+        );
+      } else if (status === 429) {
+        throw new Error(
+          errorData?.message ||
+            "Too many login attempts. Please wait a few minutes and try again.",
+        );
+      } else if (status >= 500) {
+        throw new Error(
+          errorData?.message ||
+            "We are experiencing technical issues. Please try again in a few minutes.",
+        );
+      } else {
+        throw new Error(errorData?.message || "Sign IN failed");
       }
     }
     throw new Error("An unexpected error occured!");
   }
-}
+};
 
 const SignIn = () => {
   const loginForm = useForm<SigninFormData>({
@@ -65,42 +82,48 @@ const SignIn = () => {
       password: "",
     },
   });
+  const router = useRouter();
   const loginMutation = useMutation({
-    mutationFn:loginUser,
-    onSuccess:async (data) =>{
-      toast.success(' Hooray! You’re logged in successfully! 🥳🎉✨');
-
+    mutationFn: loginUser,
+    onSuccess: async (data) => {
+       console.log("Login response data:", data);
+      toast.success(" Hooray! You’re logged in successfully! 🥳🎉✨");
 
       const user = {
-        id:data?.user?.id,
-        name:data?.user?.name,
-        email:data?.user?.id,
-        avatar:data?.user?.id,
-      }
-     
-      await SecureStore.setItemAsync("user",JSON.stringify(user));
+        id: data?.user?.id,
+        name: data?.user?.name,
+        email: data?.user?.email,
+        avatar: data?.user?.avatar || null,
+      };
 
-      if(data?.accessToken){
+      await SecureStore.setItemAsync("user", JSON.stringify(user));
+
+      if (data?.accessToken) {
         await storeAccessToken(data.accessToken);
+      } else {
+        console.error("Access token missing!", data);
       }
-      if(data?.refreshToken){
-        await SecureStore.setItemAsync("refresh_token",data.refreshToken);
+      if (data?.refreshToken) {
+        await SecureStore.setItemAsync("refresh_token", data.refreshToken);
+      } else {
+        console.error("Refresh token missing!", data);
       }
-      router.replace("/(tabs)/Home")
+      router.replace("/(tabs)/Home");
     },
-    onError:(error:Error)=>{
+    onError: (error: Error) => {
       toast.error(error?.message);
+      console.log(error.message);
     },
   });
 
-  const onLoginSubmit = (data:SigninFormData)=>{
+  const onLoginSubmit = (data: SigninFormData) => {
     loginMutation.mutate(data);
-  }
+  };
   const handleSignUpNavigation = () => {
     router.push("/screens/SignUp");
   };
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
@@ -114,7 +137,7 @@ const SignIn = () => {
           {/* Header */}
           <View className="mt-10 mb-6">
             <Text className="text-3xl font-poppins-bold text-gray-900 mb-2">
-              Welcome Back 
+              Welcome Back
             </Text>
             <Text className="text-gray-500 font-poppins text-base mt-2">
               Sign in to your account
@@ -122,7 +145,7 @@ const SignIn = () => {
           </View>
           {/* Form Field */}
           <View className="gap-6 mt-6">
-            <View className="mt-4">
+            <View className="mt-2">
               <Text className="text-gray-800 text-base font-poppins-medium mb-3">
                 Email or Phone number
               </Text>
@@ -165,7 +188,7 @@ const SignIn = () => {
                 )}
               />
             </View>
-            <View className="mt-4">
+            <View>
               <Text className="text-gray-800 text-base font-poppins-medium mb-2">
                 Password
               </Text>
@@ -234,13 +257,15 @@ const SignIn = () => {
           {/* Submit Button */}
           <TouchableOpacity
             className={`rounded-xl py-5 mt-6 ${
-              loginForm.formState.isValid ? "bg-blue-600" : "bg-gray-300"
+              loginForm.formState.isValid && !loginMutation.isPending
+                ? "bg-blue-600"
+                : "bg-gray-300"
             }`}
-             onPress={loginForm.handleSubmit(onLoginSubmit)}
-             disabled={!loginForm.formState.isValid || loginMutation.isPending}
+            onPress={loginForm.handleSubmit(onLoginSubmit)}
+            disabled={!loginForm.formState.isValid || loginMutation.isPending}
           >
             <Text className="text-white text-lg font-poppins-semibold text-center ">
-              {loginMutation.isPending ? "Signing In..." : "Sign In" }
+              {loginMutation.isPending ? "Signing In..." : "Sign In"}
             </Text>
           </TouchableOpacity>
           {/* Divider */}
