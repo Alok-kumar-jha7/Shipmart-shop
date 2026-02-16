@@ -56,13 +56,13 @@ const SignIn = () => {
           <View className="gap-6 mt-6">
             <View className="mt-4">
               <Text className="text-gray-800 text-base font-poppins-medium mb-3">
-                Email
+                Email or Phone number
               </Text>
               <Controller
                 control={loginForm.control}
                 name="email"
                 rules={{
-                  required: "Email is required",
+                  required: "Email/Phone number is required",
                   pattern: {
                     value: /^[^\s@]+@[^\s@]+\.[^\s@]+/,
                     message: "Please enter a valid email",
@@ -78,12 +78,11 @@ const SignIn = () => {
 
                       <TextInput
                         className="flex-1 ml-3 text-gray-800 font-poppins"
-                        placeholder="Enter your email"
+                        placeholder="Enter your email/phone no."
                         placeholderTextColor="#9CA3AF"
                         value={value}
                         onChangeText={onChange}
                         onBlur={onBlur}
-                        keyboardType="email-address"
                         autoCapitalize="none"
                         // editable={!loginMutation.isPending}
                       />

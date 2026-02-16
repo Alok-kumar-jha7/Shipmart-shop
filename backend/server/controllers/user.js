@@ -1,39 +1,38 @@
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import { User } from "../models/userModel.js";
 import ErrorHandler from "../middlewares/error.js";
+import { sendOtpMail } from "../util/sendEmail.js";
 
-export const  registerUser = catchAsyncError(async(req,res,next)=>{
-    
-        const {name,email,password,phone} = req.body;
-        if(!name || !email || !password || !phone){
-            return next(new ErrorHandler("Please fill all the fields",400));
-        }
-        function validatePhoneNumber(phone){
-            const phoneRegex = /^\d{10}$/;
-            return phoneRegex.test(phone);
+export const registerUser = catchAsyncError(async (req, res, next) => {
+  const { name, email, password, phone } = req.body;
 
-        }
+  if (!name || !email || !password || !phone) {
+    return next(new ErrorHandler("Please fill all the fields", 400));
+  }
 
-        if(!validatePhoneNumber(phone)){
-            return next(new ErrorHandler("Invalid phone number",400));
-        }
+  const existingUser = await User.findOne({ email });
 
-        const existingUser = await User.findOne({ $or: [{ email }, { phone }]});
-        if(existingUser){
-            return next(new ErrorHandler("User already exists",400));
-        }
-       
+  if (existingUser) {
+    return next(new ErrorHandler("User already exists", 400));
+  }
 
-        const RegisterNewUser = await User.create({
-            name,email,password,phone
-        }); 
-       
-        return res.status(201).json({
-        success: true,
-        message: "User registered successfully",
-        user:RegisterNewUser,
-    });
-   
+  const otp = Math.floor(1000 + Math.random() * 9000).toString();
+console.log("EMAIL:", process.env.EMAIL);
+console.log("PASS:", process.env.EMAIL_PASS);
 
-    
-})
+  const user = await User.create({
+    name,
+    email,
+    password,
+    phone,
+    otp,
+    otpExpires: Date.now() + 5 * 60 * 1000,
+  });
+
+  await sendOtpMail(email, otp);
+
+  res.status(201).json({
+    success: true,
+    message: "OTP sent to email",
+  });
+});

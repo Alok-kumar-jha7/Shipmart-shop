@@ -60,8 +60,8 @@ export default function SignUpOtp() {
   //Start countdown on component mount
   useEffect(() => {
     setCanResend(false);
-    setCountdown(60);
-  });
+    setCountdown(120);
+  },[]);
 
   // Auto-focus first input on mount
   useEffect(() => {

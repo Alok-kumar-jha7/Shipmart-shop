@@ -25,13 +25,13 @@ interface SignupFormData {
 }
 
 const SignUp = () => {
-    const router = useRouter();
+  const router = useRouter();
   const signupForm = useForm<SignupFormData>({
     mode: "onChange",
     defaultValues: {
-      name:"",
+      name: "",
       email: "",
-      phone:"",
+      phone: "",
       password: "",
     },
   });
@@ -48,59 +48,61 @@ const SignUp = () => {
           throw new Error(
             "Network error. Please check your connection and try again.",
           );
-
         }
         const statusCode = error?.response?.status;
         const errorData = error?.response?.data;
 
-        if(statusCode===400 || statusCode===422){
-          throw new Error(errorData?.message||"Invalid input data")
-        }else if (statusCode===409){
-          throw new Error(errorData?.message||"User already exists with this email");
-        }else if(statusCode>=500){
-          throw new Error(errorData?.message||"Server error.Please try again later!");
-        }else{
-          throw new Error(errorData?.message||"Sign up failed!");
+        if (statusCode === 400 || statusCode === 422) {
+          throw new Error(errorData?.message || "Invalid input data");
+        } else if (statusCode === 409) {
+          throw new Error(
+            errorData?.message || "User already exists with this email",
+          );
+        } else if (statusCode >= 500) {
+          throw new Error(
+            errorData?.message || "Server error.Please try again later!",
+          );
+        } else {
+          throw new Error(errorData?.message || "Sign up failed!");
         }
       }
-      throw new Error("An unexpected expected error occured")
+      throw new Error("An unexpected expected error occured");
     }
   };
   const signupMutation = useMutation({
-    mutationFn:signupUser,
-    onSuccess:(data,variables)=>{
+    mutationFn: signupUser,
+    onSuccess: (data, variables) => {
       router.replace({
-        pathname:"/(routes)/Signup-Otp",
-        params:{
-          name:variables.name,
-          phone:variables.phone,
-          email:variables.email,
-          password:variables.password,
-          
+        pathname: "/(routes)/Signup-Otp",
+        params: {
+          name: variables.name,
+          phone: variables.phone,
+          email: variables.email,
+          password: variables.password,
         },
-      })
+      });
     },
-    onError :(error:Error)=>{
+    onError: (error: Error) => {
       toast.error(error?.message);
-      console.log(error);
-    }
-  })
-  const onSignupSubmit = (data:SignupFormData) =>{
-    signupMutation.mutate(data)
-  }
+      console.log("hey this is signup:",error);
+    },
+  });
+  const onSignupSubmit = (data: SignupFormData) => {
+    signupMutation.mutate(data);
+  };
   const handleSignInNavigation = () => {
     router.push("/screens/SignIn");
   };
   const [showPassword, setShowPassword] = useState(false);
   return (
-    <SafeAreaView className="flex-1 bg-white" >
+    <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
       >
-        <ScrollView 
-        bounces={false}
-        overScrollMode="never"
+        <ScrollView
+          bounces={false}
+          overScrollMode="never"
           className="flex-1 px-6"
           showsVerticalScrollIndicator={false}
         >
@@ -146,7 +148,6 @@ const SignUp = () => {
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
-                      
                     />
                   </View>
                 )}
@@ -313,12 +314,11 @@ const SignUp = () => {
             className={`rounded-xl py-5 mt-6 ${
               signupForm.formState.isValid ? "bg-blue-600" : "bg-gray-300"
             }`}
-             onPress={signupForm.handleSubmit(onSignupSubmit)}
-             disabled={!signupForm.formState.isValid || signupMutation.isPending}
+            onPress={signupForm.handleSubmit(onSignupSubmit)}
+            disabled={!signupForm.formState.isValid || signupMutation.isPending}
           >
             <Text className="text-white text-lg font-poppins-semibold text-center ">
-              { signupMutation.isPending ? "Creating Account..." : "Sign up"}
-             
+              {signupMutation.isPending ? "Creating Account..." : "Sign up"}
             </Text>
           </TouchableOpacity>
           {/* Divider */}
