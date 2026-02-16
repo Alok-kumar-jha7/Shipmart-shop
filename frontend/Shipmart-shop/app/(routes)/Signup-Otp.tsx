@@ -42,34 +42,28 @@ export default function SignUpOtp() {
   const inputRefs = useRef<(TextInput | null)[]>([]);
 
   //Countdown timer effect
-  useEffect(() => {
-    let timer: NodeJS.Timeout | any;
+  const expiryRef = useRef(0);
 
-    if (countdown > 0 && !canResend) {
-      timer = setTimeout(() => {
-        setCountdown(countdown - 1);
-      }, 1000);
-    } else if (countdown === 0) {
+useEffect(() => {
+  expiryRef.current = Date.now() + 120 * 1000; // 2 min
+  setCanResend(false);
+
+  const interval = setInterval(() => {
+    const diff = Math.floor((expiryRef.current - Date.now()) / 1000);
+
+    if (diff <= 0) {
+      setCountdown(0);
       setCanResend(true);
+      clearInterval(interval);
+    } else {
+      setCountdown(diff);
     }
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [countdown, canResend]);
+  }, 1000);
 
-  //Start countdown on component mount
-  useEffect(() => {
-    setCanResend(false);
-    setCountdown(120);
-  },[]);
+  inputRefs.current[0]?.focus();
 
-  // Auto-focus first input on mount
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      inputRefs.current[0]?.focus();
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
+  return () => clearInterval(interval);
+}, []);
 
   useEffect(() => {
     if (!name || !email || !password || !phone) {
@@ -83,8 +77,7 @@ export default function SignUpOtp() {
   const verifyOtp = async (data: VerifyOTPData) => {
     try {
       const response = await axios.post(
-        `
-        ${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/api/verify-user`,
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/api/verify-user`,
         {
           otp: data.otp,
           email: data.email,
@@ -132,7 +125,7 @@ export default function SignUpOtp() {
   const resendOTP = async (data: ResendOTPData) => {
     try {
       const response = await axios.post(
-        ` ${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/api/verify-user`,
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/api/resend-otp`,
         data,
         { timeout: 10000 },
       );
@@ -170,7 +163,7 @@ export default function SignUpOtp() {
   const verifyOTPMutation = useMutation({
     mutationFn: verifyOtp,
     onSuccess: (data) => {
-      toast.success("Welcome!", {
+      toast.success("Welcome 🎉", {
         description: `Account created successfully for ${name}! `,
       });
       router.replace("/screens/SignIn");

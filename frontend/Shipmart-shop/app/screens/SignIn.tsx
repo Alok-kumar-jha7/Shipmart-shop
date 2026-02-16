@@ -14,10 +14,47 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Controller, useForm } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner-native";
+import axios, { isAxiosError } from "axios";
+import * as SecureStore from "expo-secure-store";
+import {storeAccessToken} from "../../utils/axiosInstance"
+
 
 interface SigninFormData {
   email: string;
   password: string;
+}
+
+const loginUser = async (userData:SigninFormData) =>{
+  try{
+    const response = await axios.post(
+      `${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/api/login-user`,userData);
+    return response.data;
+  }
+  catch(err){
+    if(isAxiosError(err)){
+      if(!err.response){
+        throw new Error("Network error. Please check your internet connection.")
+      }
+      const status = err.response.status;
+      const errorData = err.response.data;
+      if(status===400||status===422){
+        throw new Error(errorData?.message||"Invalid request. Please check your input and try again.");
+      }else if(status ===401){
+        throw new Error(errorData?.message || "Invalid credentials. Please check your email and password ");  
+      }else if(status===404){
+        throw new Error(errorData?.message || "Requested page not found. Please contact support.");
+      }else if(status===429){
+        throw new Error(errorData?.message ||"Too many login attempts. Please wait a few minutes and try again.");
+      }else if(status>=500){
+        throw new Error(errorData?.message ||"We are experiencing technical issues. Please try again in a few minutes.");
+      }else{
+        throw new Error(errorData?.message||"Sign IN failed")
+      }
+    }
+    throw new Error("An unexpected error occured!");
+  }
 }
 
 const SignIn = () => {
@@ -28,6 +65,37 @@ const SignIn = () => {
       password: "",
     },
   });
+  const loginMutation = useMutation({
+    mutationFn:loginUser,
+    onSuccess:async (data) =>{
+      toast.success(' Hooray! You’re logged in successfully! 🥳🎉✨');
+
+
+      const user = {
+        id:data?.user?.id,
+        name:data?.user?.name,
+        email:data?.user?.id,
+        avatar:data?.user?.id,
+      }
+     
+      await SecureStore.setItemAsync("user",JSON.stringify(user));
+
+      if(data?.accessToken){
+        await storeAccessToken(data.accessToken);
+      }
+      if(data?.refreshToken){
+        await SecureStore.setItemAsync("refresh_token",data.refreshToken);
+      }
+      router.replace("/(tabs)/Home")
+    },
+    onError:(error:Error)=>{
+      toast.error(error?.message);
+    },
+  });
+
+  const onLoginSubmit = (data:SigninFormData)=>{
+    loginMutation.mutate(data);
+  }
   const handleSignUpNavigation = () => {
     router.push("/screens/SignUp");
   };
@@ -46,7 +114,7 @@ const SignIn = () => {
           {/* Header */}
           <View className="mt-10 mb-6">
             <Text className="text-3xl font-poppins-bold text-gray-900 mb-2">
-              Welcome Back
+              Welcome Back 
             </Text>
             <Text className="text-gray-500 font-poppins text-base mt-2">
               Sign in to your account
@@ -84,7 +152,7 @@ const SignIn = () => {
                         onChangeText={onChange}
                         onBlur={onBlur}
                         autoCapitalize="none"
-                        // editable={!loginMutation.isPending}
+                        editable={!loginMutation.isPending}
                       />
                     </View>
 
@@ -127,12 +195,12 @@ const SignIn = () => {
                         onChangeText={onChange}
                         onBlur={onBlur}
                         secureTextEntry={!showPassword}
-                        // editable={!loginMutation.isPending}
+                        editable={!loginMutation.isPending}
                       />
 
                       <TouchableOpacity
                         onPress={() => setShowPassword(!showPassword)}
-                        // disabled={!loginMutation.isPending}
+                        disabled={loginMutation.isPending}
                       >
                         <Ionicons
                           name={
@@ -156,7 +224,7 @@ const SignIn = () => {
             <TouchableOpacity
               className="self-end"
               onPress={() => router.push("/(routes)/ForgotPassword")}
-              // disabled={loginMutation.isPending}
+              disabled={loginMutation.isPending}
             >
               <Text className="text-blue-600 font-poppins-medium">
                 Forgot Password?
@@ -168,12 +236,11 @@ const SignIn = () => {
             className={`rounded-xl py-5 mt-6 ${
               loginForm.formState.isValid ? "bg-blue-600" : "bg-gray-300"
             }`}
-            //  onPress={loginForm.handleSubmit(onLoginSubmit)}
-            //  disabled={!loginForm.formState.isValid || loginMutation.isPending}
+             onPress={loginForm.handleSubmit(onLoginSubmit)}
+             disabled={!loginForm.formState.isValid || loginMutation.isPending}
           >
             <Text className="text-white text-lg font-poppins-semibold text-center ">
-              {"Sign In"}
-              {/* loginMutation.isPending ? "Signing In..." :  */}
+              {loginMutation.isPending ? "Signing In..." : "Sign In" }
             </Text>
           </TouchableOpacity>
           {/* Divider */}
@@ -188,7 +255,7 @@ const SignIn = () => {
           <View className="space-y-4 mb-4">
             <TouchableOpacity
               className="flex-row items-center mb-4 justify-center bg-white border border-gray-300 rounded-xl py-4"
-              // disabled={loginMutation.isPending}
+              disabled={loginMutation.isPending}
             >
               <View className="w-6 h-6 mr-3">
                 <Image
@@ -206,7 +273,7 @@ const SignIn = () => {
 
             <TouchableOpacity
               className="flex-row items-center mb-4 justify-center bg-white border border-gray-300 rounded-xl py-4"
-              // disabled={loginMutation.isPending}
+              disabled={loginMutation.isPending}
             >
               <Ionicons
                 name="logo-facebook"
@@ -226,7 +293,7 @@ const SignIn = () => {
             </Text>
             <TouchableOpacity
               onPress={handleSignUpNavigation}
-              // disabled={loginMutation.isPending}
+              disabled={loginMutation.isPending}
             >
               <Text className="text-blue-600 font-poppins-semibold">
                 Sign Up

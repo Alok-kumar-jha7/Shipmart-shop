@@ -1,22 +1,24 @@
-import { catchAsyncError } from "../middlewares/catchAsyncError.js";
-import { User } from "../models/userModel.js";
-import ErrorHandler from "../middlewares/error.js";
-import { sendOtpMail } from "../util/sendEmail.js";
+  import { catchAsyncError } from "../middlewares/catchAsyncError.js";
+  import { User } from "../models/userModel.js";
+  import ErrorHandler from "../middlewares/error.js";
+  import { sendOtpMail } from "../util/sendEmail.js";
 
-export const registerUser = catchAsyncError(async (req, res, next) => {
+  export const registerUser = catchAsyncError(async (req, res, next) => {
   const { name, email, password, phone } = req.body;
 
   if (!name || !email || !password || !phone) {
     return next(new ErrorHandler("Please fill all the fields", 400));
   }
 
-  const existingUser = await User.findOne({ email });
+  const existingUser = await User.findOne({
+    $or: [{ email }, { phone }],
+  });
 
   if (existingUser) {
     return next(new ErrorHandler("User already exists", 400));
   }
 
-  const otp = Math.floor(1000 + Math.random() * 9000).toString();24
+  const otp = Math.floor(1000 + Math.random() * 9000).toString();
 
   const user = await User.create({
     name,
@@ -25,6 +27,7 @@ export const registerUser = catchAsyncError(async (req, res, next) => {
     phone,
     otp,
     otpExpires: Date.now() + 5 * 60 * 1000,
+    isVerified: false,
   });
 
   await sendOtpMail(email, otp);

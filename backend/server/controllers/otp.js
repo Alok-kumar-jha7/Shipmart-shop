@@ -18,19 +18,21 @@ export const verifyOtp = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("User not found", 404));
   }
 
-  if (user.otpExpires < Date.now()) {
+ if (user.otpExpires.getTime() < Date.now())
+ {
     return next(new ErrorHandler("OTP expired", 400));
   }
 
-  if (user.otp !== otp) {
+  if (user.otp !== otp.toString()) {
     return next(new ErrorHandler("Invalid OTP", 400));
   }
+await User.findByIdAndUpdate(user._id, {
+  isVerified: true,
+  otp: undefined,
+  otpExpires: undefined,
+});
 
-  user.isVerified = true;
-  user.otp = undefined;
-  user.otpExpires = undefined;
 
-  await user.save();
 
   res.status(200).json({
     success: true,
@@ -58,11 +60,11 @@ export const resendOtp = catchAsyncError(async (req, res, next) => {
   }
 
   const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
-
-  user.otp = newOtp;
-  user.otpExpires = Date.now() + 5 * 60 * 1000;
-
-  await user.save();
+ 
+ await User.findByIdAndUpdate(user._id, {
+  otp: newOtp,
+  otpExpires: Date.now() + 5 * 60 * 1000
+});
 
   await sendOtpMail(email, newOtp);
 
