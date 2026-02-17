@@ -30,7 +30,6 @@ const loginUser = async (userData: SigninFormData) => {
       `${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/api/login-user`,
       userData,
     );
-    console.log("Backend response:", response.data);
     return response.data;
   } catch (err) {
     if (isAxiosError(err)) {
@@ -86,7 +85,6 @@ const SignIn = () => {
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: async (data) => {
-       console.log("Login response data:", data);
       toast.success(" Hooray! You’re logged in successfully! 🥳🎉✨");
 
       const user = {
