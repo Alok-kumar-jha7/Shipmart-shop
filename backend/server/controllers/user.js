@@ -51,40 +51,43 @@ export const loginUser = catchAsyncError(async (req, res, next) => {
   }
 
   const user = await User.findOne({ email });
+
   if (!user) {
     return next(new ErrorHandler("Invalid credentials", 401));
   }
 
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await user.comparePassword(password);
+
   if (!isMatch) {
     return next(new ErrorHandler("Invalid credentials", 401));
   }
 
   if (!user.isVerified) {
-    return next(new ErrorHandler("Email not verified. Please verify OTP first", 401));
+    return next(
+      new ErrorHandler("Email not verified. Please verify OTP first", 401)
+    );
   }
 
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
-// await User.findByIdAndUpdate(user._id, {
-//   refreshToken: refreshToken, 
-// });
-user.refreshToken = refreshToken; 
-await user.save();
+  await User.findByIdAndUpdate(user._id, {
+    refreshToken,
+  });
 
   res.status(200).json({
     success: true,
-  accessToken,
-  refreshToken,
-  user: {
-    id: user._id,
-    name: user.name,
-    email: user.email,
-    avatar: user.avatar || null,
-  },
+    accessToken,
+    refreshToken,
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      avatar: null,
+    },
   });
 });
+
 
 export const refreshToken = catchAsyncError(async (req, res, next) => {
   const { token } = req.body;
