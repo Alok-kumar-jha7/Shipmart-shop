@@ -89,21 +89,21 @@ export const loginUser = catchAsyncError(async (req, res, next) => {
 });
 
 
-export const refreshToken = catchAsyncError(async (req, res, next) => {
-  const { token } = req.body;
+// export const refreshToken = catchAsyncError(async (req, res, next) => {
+//   const { token } = req.body;
 
-  if (!token) return next(new ErrorHandler("No token provided", 401));
+//   if (!token) return next(new ErrorHandler("No token provided", 401));
 
-  const user = await User.findOne({ refreshToken: token });
-  if (!user) return next(new ErrorHandler("Invalid refresh token", 403));
+//   const user = await User.findOne({ refreshToken: token });
+//   if (!user) return next(new ErrorHandler("Invalid refresh token", 403));
 
-  jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err) => {
-    if (err) return next(new ErrorHandler("Refresh token expired", 403));
+//   jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err) => {
+//     if (err) return next(new ErrorHandler("Refresh token expired", 403));
 
-    const accessToken = generateAccessToken(user);
-    res.status(200).json({ success: true, accessToken });
-  });
-});
+//     const accessToken = generateAccessToken(user);
+//     res.status(200).json({ success: true, accessToken });
+//   });
+// });
 
 
  
@@ -113,9 +113,7 @@ export const logoutUser = catchAsyncError(async (req, res, next) => {
 
   const user = await User.findOne({ refreshToken: token });
   if (user) {
-//     await User.findByIdAndUpdate(user._id, {
-//   refreshToken: null, 
-// });
+
 user.refreshToken = null;
  await user.save();
   }
