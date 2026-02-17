@@ -4,6 +4,7 @@ import { verifyOtp, resendOtp } from "../controllers/otp.js";
 
 const router = express.Router();
 
+router.use(express.urlencoded({ extended: true }));
 router.post("/user-registration", registerUser);
 router.post("/login-user",loginUser)
 router.post("/verify-user", verifyOtp);

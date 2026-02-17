@@ -22,8 +22,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: [6, "Password should be at least 6 characters."],
-      maxlength: [26, "password can not exceed 26 characters."],
-      select: false,
     },
     phone: {
       type: String,
@@ -38,6 +36,10 @@ const userSchema = new mongoose.Schema(
     otp: String,
 
     otpExpires: Date,
+    refreshToken : {
+    type: String,
+    select: false, 
+  },
   },
   { timestamps: true },
 );
@@ -48,6 +50,5 @@ userSchema.pre("save", async function (next) {
   }
   this.password = await bcrypt.hash(this.password, 10);
 });
-
 
 export const User = mongoose.model("User", userSchema);
