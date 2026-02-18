@@ -50,7 +50,7 @@ export const loginUser = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Please provide email and password", 400));
   }
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email});
 
   if (!user) {
     return next(new ErrorHandler("Invalid credentials", 401));
@@ -83,6 +83,7 @@ export const loginUser = catchAsyncError(async (req, res, next) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      phone:user.phone,
       avatar: null,
     },
   });

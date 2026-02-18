@@ -9,7 +9,7 @@ export default function Index() {
  const { user } = useUser();
 
 if (user) {
-  return <Redirect href={"/(tabs)/Home"} />;
+  return <Home />;
 }
 
  

@@ -21,6 +21,7 @@ import { storeAccessToken } from "../../utils/axiosInstance";
 
 interface SigninFormData {
   email: string;
+  phone:string;
   password: string;
 }
 
@@ -78,6 +79,7 @@ const SignIn = () => {
     mode: "onChange",
     defaultValues: {
       email: "",
+      phone:"",
       password: "",
     },
   });
@@ -90,6 +92,7 @@ const SignIn = () => {
       const user = {
         id: data?.user?.id,
         name: data?.user?.name,
+        phone:data?.user?.phone,
         email: data?.user?.email,
         avatar: data?.user?.avatar || null,
       };
@@ -145,16 +148,16 @@ const SignIn = () => {
           <View className="gap-6 mt-6">
             <View className="mt-2">
               <Text className="text-gray-800 text-base font-poppins-medium mb-3">
-                Email or Phone number
+                Email 
               </Text>
               <Controller
                 control={loginForm.control}
                 name="email"
                 rules={{
-                  required: "Email/Phone number is required",
+                  required: "Email is required",
                   pattern: {
                     value: /^[^\s@]+@[^\s@]+\.[^\s@]+/,
-                    message: "Please enter a valid email",
+                    message: "Please enter a valid email address",
                   },
                 }}
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -167,7 +170,7 @@ const SignIn = () => {
 
                       <TextInput
                         className="flex-1 ml-3 text-gray-800 font-poppins"
-                        placeholder="Enter your email/phone no."
+                        placeholder="Enter your email."
                         placeholderTextColor="#9CA3AF"
                         value={value}
                         onChangeText={onChange}

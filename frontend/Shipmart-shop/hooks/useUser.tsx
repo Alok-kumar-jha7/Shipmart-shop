@@ -10,13 +10,13 @@ interface User {
     id: string;
     file_id: string;
     url: string;
-  };
+  }|null;
 }
-console.log("useUser mounted");
 
 export default function useUser() {
   const [user, setUser] = useState<User>();
-
+  
+  console.log("hey this is userData",user);
   const getUserData = async () => {
     try {
       const userString = await SecureStore.getItemAsync("user");
@@ -43,7 +43,6 @@ export default function useUser() {
   };
   useEffect(() => {
     getUserData();
-    console.log("user data:", user);
   },[]);
 
   return { user, updateUserData };
