@@ -10,13 +10,12 @@ interface User {
     id: string;
     file_id: string;
     url: string;
-  }|null;
+  } | null;
 }
 
 export default function useUser() {
-  const [user, setUser] = useState<User>();
-  
-  console.log("hey this is userData",user);
+  const [user, setUser] = useState<User | null>(null);
+
   const getUserData = async () => {
     try {
       const userString = await SecureStore.getItemAsync("user");
@@ -35,15 +34,17 @@ export default function useUser() {
   const updateUserData = async (newUserData: User) => {
     try {
       await SecureStore.setItemAsync("user", JSON.stringify(newUserData));
-      
+
       setUser(newUserData);
     } catch (error) {
       console.error("Error updating user data:", error);
     }
   };
   useEffect(() => {
+    console.log("hey this is userData", user);
+
     getUserData();
-  },[]);
+  }, []);
 
   return { user, updateUserData };
 }
