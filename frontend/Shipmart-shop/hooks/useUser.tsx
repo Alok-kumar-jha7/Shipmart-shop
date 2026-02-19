@@ -1,6 +1,5 @@
 import * as SecureStore from "expo-secure-store";
 import { useState, useEffect } from "react";
-import { toast } from "sonner-native";
 
 interface User {
   id: string;
