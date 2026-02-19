@@ -3,8 +3,6 @@ import { User } from "../models/userModel.js";
 import ErrorHandler from "../middlewares/error.js";
 import { sendOtpMail } from "../util/sendEmail.js";
 import { generateAccessToken, generateRefreshToken } from "../util/jwt.js";
-import bcrypt from "bcryptjs";
-import jwt  from "jsonwebtoken";
 
 
 export const registerUser = catchAsyncError(async (req, res, next) => {

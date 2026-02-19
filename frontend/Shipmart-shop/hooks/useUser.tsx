@@ -1,5 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 import { useState, useEffect } from "react";
+import { toast } from "sonner-native";
 
 interface User {
   id: string;
@@ -14,8 +15,8 @@ interface User {
 }
 
 export default function useUser() {
-  const [user, setUser] = useState<User | null>(null);
-
+  const [user, setUser] = useState<User>();
+  console.log(user);
   const getUserData = async () => {
     try {
       const userString = await SecureStore.getItemAsync("user");
@@ -31,10 +32,10 @@ export default function useUser() {
     }
     return null;
   };
+
   const updateUserData = async (newUserData: User) => {
     try {
       await SecureStore.setItemAsync("user", JSON.stringify(newUserData));
-
       setUser(newUserData);
     } catch (error) {
       console.error("Error updating user data:", error);
@@ -42,9 +43,8 @@ export default function useUser() {
   };
   useEffect(() => {
     console.log("hey this is userData", user);
-
     getUserData();
-  }, []);
+  }, [user]);
 
   return { user, updateUserData };
 }
