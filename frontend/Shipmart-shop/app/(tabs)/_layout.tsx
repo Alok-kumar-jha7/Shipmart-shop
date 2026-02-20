@@ -95,7 +95,7 @@ const TabLayout = () => {
       />
 
       <Tabs.Screen
-        name="settings"
+        name="profile"
         options={{
           title: "Profile",
           tabBarIcon: ({ color, size, focused }) => (
