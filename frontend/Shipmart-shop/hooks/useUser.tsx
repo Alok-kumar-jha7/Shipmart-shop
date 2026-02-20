@@ -41,9 +41,8 @@ export default function useUser() {
     }
   };
   useEffect(() => {
-    console.log("hey this is userData", user);
     getUserData();
-  }, [user]);
+  }, []);
 
   return { user, updateUserData };
 }

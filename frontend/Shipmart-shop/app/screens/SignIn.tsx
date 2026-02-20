@@ -109,7 +109,7 @@ const SignIn = () => {
       } else {
         console.error("Refresh token missing!", data);
       }
-      router.replace("/(tabs)/Home");
+      router.replace("/home");
     },
     onError: (error: Error) => {
       toast.error(error?.message);

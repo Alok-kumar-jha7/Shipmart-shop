@@ -6,7 +6,7 @@ import { Redirect } from "expo-router";
 export default function Index() {
   const { user } = useUser();
   if (user) {
-    return <Redirect href={"/(tabs)/Home"} />;
+    return <Redirect href={"/(tabs)/home"} />;
   }
 
   return <OnBoarding />;
