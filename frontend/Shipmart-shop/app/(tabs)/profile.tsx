@@ -15,63 +15,62 @@ import { router } from "expo-router";
 const Profile = () => {
   const { user } = useUser();
 
-  const menuItems =[
+  const menuItems = [
     {
-      id:"orders",
-      title:"My Orders",
-      subtitle:"Track your orders and view history",
-      icon:"bag-outline",
-      iconColor:"#2563EB",
-      iconBg:"#DBEAFE",
-      onPress:()=> router.push("/(routes)/my-orders"),
-    },
-    {
-      id:"inbox",
-      title:"Inbox",
-      subtitle:"View your messages",
-      icon:"mail-outline",
-      iconColor:"#059669",
-      iconBg:"#D1FAE5",
-      onPress:()=> router.push("/(tabs)/messages"),
+      id: "orders",
+      title: "My Orders",
+      subtitle: "Track your orders and view history",
+      icon: "bag-outline",
+      iconColor: "#2563EB",
+      iconBg: "#DBEAFE",
+      onPress: () => router.push("/(routes)/my-orders"),
     },
     {
-      id:"notifications",
-      title:"Notifications",
-      subtitle:"Manage your notifications",
-      icon:"notifications-outline",
-      iconColor:"#D97706",
-      iconBg:"#FEF3C7",
-      onPress:()=> router.push("/(routes)/notifications"),
-    },
-      {
-      id:"shipping",
-      title:"Shipping Address",
-      subtitle:"Manage your delivery address",
-      icon:"location-outline",
-      iconColor:"#7C3AED",
-      iconBg:"#EDE9FE",
-      onPress:()=> router.push("/(routes)/shipping-address"),
+      id: "inbox",
+      title: "Inbox",
+      subtitle: "View your messages",
+      icon: "mail-outline",
+      iconColor: "#059669",
+      iconBg: "#D1FAE5",
+      onPress: () => router.push("/(tabs)/messages"),
     },
     {
-      id:"password",
-      title:"Password",
-      subtitle:"Update your account password",
-      icon:"lock-closed-outline",
-      iconColor:"#DC2626",
-      iconBg:"#FEE2E2",
-      onPress:()=> router.push("/(routes)/change-password"),
+      id: "notifications",
+      title: "Notifications",
+      subtitle: "Manage your notifications",
+      icon: "notifications-outline",
+      iconColor: "#D97706",
+      iconBg: "#FEF3C7",
+      onPress: () => router.push("/(routes)/notifications"),
     },
     {
-      id:"settings",
-      title:"Account Settings",
-      subtitle:"Manage your account prefrences",
-      icon:"settings-outline",
-      iconColor:"#6B7280",
-      iconBg:"#F3F4F6",
-      onPress:()=> router.push("/(routes)/settings"),
+      id: "shipping",
+      title: "Shipping Address",
+      subtitle: "Manage your delivery address",
+      icon: "location-outline",
+      iconColor: "#7C3AED",
+      iconBg: "#EDE9FE",
+      onPress: () => router.push("/(routes)/shipping-address"),
     },
-
-  ]
+    {
+      id: "password",
+      title: "Password",
+      subtitle: "Update your account password",
+      icon: "lock-closed-outline",
+      iconColor: "#DC2626",
+      iconBg: "#FEE2E2",
+      onPress: () => router.push("/(routes)/change-password"),
+    },
+    {
+      id: "settings",
+      title: "Account Settings",
+      subtitle: "Manage your account prefrences",
+      icon: "settings-outline",
+      iconColor: "#6B7280",
+      iconBg: "#F3F4F6",
+      onPress: () => router.push("/(routes)/settings"),
+    },
+  ];
   return (
     <SafeAreaView edges={["bottom"]} className="flex-1 pt-12 bg-white">
       <StatusBar barStyle={"dark-content"} backgroundColor={"#ffffff"} />
@@ -166,7 +165,40 @@ const Profile = () => {
           </View>
           {/* Menu Items */}
           <View className="gap-4">
-
+            {menuItems.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                className="bg-white rounded-2xl shadow-[0_0_3px_rgba(0,0,0,0.9)] border border-gray-100 p-4"
+                onPress={item.onPress}
+                activeOpacity={0.7}
+              >
+                <View className="flex-row items-center">
+                  <View
+                    
+                    style={{
+                      backgroundColor: item.iconBg,
+                      height: 35,
+                      width: 35,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginRight: 4,
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Ionicons
+                      name={item.icon as any}
+                      size={22}
+                      color={item.iconColor}
+                    />
+                  </View>
+                  <View className="flex-1 ml-4">
+                    <Text className="text-lg font-poppins-semibold text-gray-900">
+                      {item.title}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
       </ScrollView>
