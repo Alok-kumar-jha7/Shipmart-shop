@@ -18,7 +18,6 @@ app.use(errorMiddleware);
 
 setInterval(async () => {
   const now = Date.now();
-
   await User.updateMany(
     {
       otpExpires: { $lte: now },
@@ -31,7 +30,6 @@ setInterval(async () => {
       }
     }
   );
-
 }, 60 * 1000);
 
 

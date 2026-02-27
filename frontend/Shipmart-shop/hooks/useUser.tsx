@@ -15,14 +15,13 @@ interface User {
 
 export default function useUser() {
   const [user, setUser] = useState<User>();
-  
-  
   const getUserData = async () => {
     try {
       const userString = await SecureStore.getItemAsync("user");
       if(userString){
         const userData = JSON.parse(userString);
         setUser(userData)
+        return userData;
       }
     return null;
     }catch(error){
@@ -30,8 +29,6 @@ export default function useUser() {
       return null;
     }
   };
-   
-
   const updateUserData = async (newUserData: User) => {
     try {
       await SecureStore.setItemAsync("user", JSON.stringify(newUserData));
@@ -40,12 +37,10 @@ export default function useUser() {
       console.error("Error updating user data:", error);
     }
   };
-
-  useEffect(() => {
-    console.log("hey this is userData", user);
-
+    useEffect(()=>{
     getUserData();
-  }, []);
-
+    console.log("hey this is userData", user);
+  },[]);
+  
   return { user,updateUserData };
 }
