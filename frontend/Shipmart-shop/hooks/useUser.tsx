@@ -10,34 +10,27 @@ interface User {
     id: string;
     file_id: string;
     url: string;
-  } | null;
+  };
 }
 
 export default function useUser() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const userString = await SecureStore.getItemAsync("user");
-
-        if (userString) {
-          const parsedUser = JSON.parse(userString);
-          setUser(parsedUser);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("Error retrieving user data:", error);
-        setUser(null);
-      } finally {
-        setLoading(false);
+  const [user, setUser] = useState<User>();
+  
+  
+  const getUserData = async () => {
+    try {
+      const userString = await SecureStore.getItemAsync("user");
+      if(userString){
+        const userData = JSON.parse(userString);
+        setUser(userData)
       }
-    };
-
-    getUserData();
-  }, []);
+    return null;
+    }catch(error){
+      console.error("Error retrieving user data",error);
+      return null;
+    }
+  };
+   
 
   const updateUserData = async (newUserData: User) => {
     try {
@@ -47,6 +40,12 @@ export default function useUser() {
       console.error("Error updating user data:", error);
     }
   };
+
+  useEffect(() => {
+    console.log("hey this is userData", user);
+
+    getUserData();
+  }, []);
 
   return { user, loading, updateUserData };
 }

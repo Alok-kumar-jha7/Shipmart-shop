@@ -2,7 +2,6 @@ import OnBoarding from "./screens/OnBoarding";
 import "../global.css";
 import useUser from "../hooks/useUser";
 import { Redirect } from "expo-router";
-import Home from "./(tabs)/home";
 import { ActivityIndicator, View } from "react-native";
 
 export default function Index() {
