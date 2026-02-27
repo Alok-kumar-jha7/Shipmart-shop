@@ -47,5 +47,5 @@ export default function useUser() {
     getUserData();
   }, []);
 
-  return { user, loading, updateUserData };
+  return { user,updateUserData };
 }
