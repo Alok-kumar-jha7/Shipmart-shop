@@ -14,23 +14,30 @@ interface User {
 }
 
 export default function useUser() {
-  const [user, setUser] = useState<User>();
-  console.log(user);
-  const getUserData = async () => {
-    try {
-      const userString = await SecureStore.getItemAsync("user");
-      console.log("SAVED USER:", userString);
-      if (userString) {
-        const user = JSON.parse(userString);
-        setUser(user);
-        return user;
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const userString = await SecureStore.getItemAsync("user");
+
+        if (userString) {
+          const parsedUser = JSON.parse(userString);
+          setUser(parsedUser);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Error retrieving user data:", error);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-      return null;
-    } catch (error) {
-      console.error("Error retrieving user data:", error);
-    }
-    return null;
-  };
+    };
+
+    getUserData();
+  }, []);
 
   const updateUserData = async (newUserData: User) => {
     try {
@@ -40,9 +47,6 @@ export default function useUser() {
       console.error("Error updating user data:", error);
     }
   };
-  useEffect(() => {
-    getUserData();
-  }, []);
 
-  return { user, updateUserData };
+  return { user, loading, updateUserData };
 }

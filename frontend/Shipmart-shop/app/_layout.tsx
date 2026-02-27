@@ -37,7 +37,6 @@ export default function RootLayout() {
             <Stack.Screen name="screens/OnBoarding" />
             <Stack.Screen name="screens/SignIn" />
           </Stack>
-
           <StatusBar style="dark" />
         </Providers>
       </GestureHandlerRootView>
