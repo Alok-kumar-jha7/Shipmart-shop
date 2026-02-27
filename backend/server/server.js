@@ -18,11 +18,22 @@ app.use(errorMiddleware);
 
 setInterval(async () => {
   const now = Date.now();
+
   await User.updateMany(
-    { otpExpires: { $lte: now }, otp: { $exists: true } },
-    { $set: { otp: null, otpExpires: null } }
+    {
+      otpExpires: { $lte: now },
+      otp: { $exists: true }
+    },
+    {
+      $unset: {
+        otp: "",
+        otpExpires: ""
+      }
+    }
   );
+
 }, 60 * 1000);
+
 
 
 const startServer = async () => {
