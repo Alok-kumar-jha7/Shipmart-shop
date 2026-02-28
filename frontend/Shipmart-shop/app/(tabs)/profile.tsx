@@ -76,7 +76,7 @@ const Profile = () => {
       <StatusBar barStyle={"dark-content"} backgroundColor={"#ffffff"} />
       {/* Header */}
 
-      <View className="bg-white px-4 py-4 border-b border-gray-100">
+      <View className="bg-white px-4 py-4 border-b border-gray-300">
         <Text className="text-2xl font-poppins-bold text-gray-900">
           Profile
         </Text>
@@ -174,11 +174,10 @@ const Profile = () => {
               >
                 <View className="flex-row items-center">
                   <View
-                    
                     style={{
                       backgroundColor: item.iconBg,
-                      height: 35,
-                      width: 35,
+                      height: 40,
+                      width: 40,
                       alignItems: "center",
                       justifyContent: "center",
                       marginRight: 4,
@@ -195,11 +194,27 @@ const Profile = () => {
                     <Text className="text-lg font-poppins-semibold text-gray-900">
                       {item.title}
                     </Text>
+                    <Text className="text-gray-500 font-poppins-medium text-sm">
+                      {item.subtitle}
+                    </Text>
                   </View>
+                  <Ionicons name="chevron-forward" size={20} color={"#9CA3AF"}/>
                 </View>
               </TouchableOpacity>
             ))}
           </View>
+          <TouchableOpacity 
+          className="bg-red-50 rounded-2xl border border-red-200 p-5 mt-6"
+          onPress={()=>{}}
+          activeOpacity={0.7}
+          >
+            <View className="flex-row items-center justify-center">
+              <Ionicons name="log-out-outline" size={21} color={"#EF4444"}/>
+              <Text className="ml-2 font-poppins-semibold text-red-500 text-lg">
+              Logout
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
