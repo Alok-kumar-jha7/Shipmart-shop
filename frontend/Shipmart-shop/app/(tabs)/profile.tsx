@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React,{useState} from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useUser from "@/hooks/useUser";
 import { Ionicons, SimpleLineIcons } from "@expo/vector-icons";
@@ -14,6 +14,15 @@ import { router } from "expo-router";
 
 const Profile = () => {
   const { user } = useUser();
+
+  const [showPhotoModal,setShowPhotoModal]=useState(false);
+  const [selectedImage,setSelectedImage]=useState<string|null>(null);
+  const [uploadedImageUrl,setUploadedImageUrl]=useState<string|null>(null);
+  const [uploadedImageId,setUploadedImageId]=useState<string>("");
+  const [isUploading,setIsUploading]=useState(false);
+  const [showAIFeatures,setShowAIFeatures]=useState(false);
+  const [appliedFeatures,setAppliedFeatures]=useState<string[]>([]);
+  const [isApplyingAI,setIsApplyingAI]=useState(false);
 
   const menuItems = [
     {
