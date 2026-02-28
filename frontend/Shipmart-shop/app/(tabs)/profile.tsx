@@ -11,6 +11,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import useUser from "@/hooks/useUser";
 import { Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { toast } from "sonner-native";
+import * as ImagePicker from "expo-image-picker"
 
 const Profile = () => {
   const { user } = useUser();
@@ -23,6 +25,55 @@ const Profile = () => {
   const [showAIFeatures,setShowAIFeatures]=useState(false);
   const [appliedFeatures,setAppliedFeatures]=useState<string[]>([]);
   const [isApplyingAI,setIsApplyingAI]=useState(false);
+
+
+  const pickImage = async () =>{
+    try{
+      const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if(status!== "granted"){
+        toast.error("Permission Required",);
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes:['images'],
+        allowsEditing:true,
+        aspect:[1,1],
+        quality:0.8,
+      });
+      if(!result.canceled && result.assets[0]){
+        setSelectedImage(result.assets[0].uri);
+        setShowAIFeatures(true);
+      }
+    }catch(error){
+      console.error("Error picking image",error);
+      toast.error("Failed to pick image. Pleas try again. ");
+    }
+  };
+
+  const takePhoto = async() =>{
+      try{
+        const { status } = await ImagePicker.getCameraPermissionsAsync();
+
+        if(status !== "granted"){
+          toast.error("Sorry, we need camera permission to make this work!");
+          return;
+        }
+        const result = await ImagePicker.launchCameraAsync({
+          allowsEditing:true,
+          aspect:[1,1],
+          quality:0.8,
+        });
+        if(!result.canceled && result.assets[0]){
+          setSelectedImage(result.assets[0].uri);
+          setShowAIFeatures(true);
+        }
+      }catch(error){
+        console.error("Error taking photo");
+        toast.error("Failed to take photo. Please try again.");
+      }
+  };
 
   const menuItems = [
     {
