@@ -240,7 +240,12 @@ const Profile = () => {
                   </TouchableOpacity>
                   </View>
               ):(
-                <View>
+                <View className="gap-4">
+                  <Text className="text-lg font-poppins-medium text-gray-700">
+                    Enhance your photo with AI
+                  </Text>
+                  <View className="gap-3">
+                    </View>
                   </View>
               )}
             </View>
