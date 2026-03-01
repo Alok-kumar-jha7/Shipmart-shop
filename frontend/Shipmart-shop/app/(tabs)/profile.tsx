@@ -5,6 +5,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import React,{useState} from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -131,6 +132,123 @@ const Profile = () => {
       onPress: () => router.push("/(routes)/settings"),
     },
   ];
+
+  const renderPhotoModal = () =>(
+      <Modal
+      visible={showPhotoModal}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      >
+       <SafeAreaView className="flex-1 bg-white">
+        <View className="flex-row items-center justify-between p-4 border-b border-gray-100">
+          <Text className="text-xl font-poppins-medium text-gray-800">
+            Change Photo
+          </Text>
+          <TouchableOpacity 
+            onPress={()=>{
+              setShowPhotoModal(false);
+              setSelectedImage(null);
+              setShowAIFeatures(false);
+            }}
+          >
+            <Ionicons name="close" size={24} color="#6B7280"/>
+          </TouchableOpacity>
+        </View>
+        <ScrollView className="flex-1 p-4">
+            {!selectedImage?(
+              <View className="gap-2">
+                <Text className="text-lg font-poppins-medium text-gray-700">
+                  Choose how you want to add your photo 
+                </Text>
+                <TouchableOpacity
+                className="flex-row mb-2 items-center p-4 border border-gray-200 rounded-xl"
+                onPress={takePhoto}
+                >
+                  <View className="w-12 h-12 bg-blue-100 rounded-full items-cneter justify-cneter mr-4">
+                    <Ionicons name="camera" size={24} color={"#2563EB"} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-lg font-poppins-semibold text-gray-800">
+                      Take Photo
+                    </Text>
+                    <Text className="text-gary-500 font-poppins-medium">
+                      Use your camera to take a new photo
+                    </Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color="#6B7280"/>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                className="flex-row items-center p-4 border border-gray-200 rounded-xl"
+                onPress={pickImage}
+                >
+                  <View className="w-12 h-12 bg-green-100 rounded-full items-center justify-center mr-4">
+                    <Ionicons name="images" size={24} color="#059669"/>
+                  </View>
+                  <View className="flex-1">'
+                    <Text className="text-lg font-poppins-semibold text-gray-800">
+                      Choose from library
+                    </Text>
+                    <Text className="text-gray-500 font-poppins-medium">
+                      Select a photo from your gallery
+                    </Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color="#6B7280"/>
+                </TouchableOpacity>
+              </View>
+            ):(
+            <View className="space-y-6">
+              <View
+              className="items-center"
+              >
+                {isApplyingAI? (
+                  <View 
+                  className="w-32 h-32 rounded-full bg-gray-100 items-center justify-center"
+                  >
+                    <View className="animated-spin">
+                      <Ionicons name="refresh" size={32} color={"#6B7280"}/>
+                    </View>
+                    <Text className="text-xs text-gray-500 mt-2">
+                      Applying AI.....
+                    </Text>
+                    </View>
+                ):(
+                <Image 
+                key={uploadedImageUrl|| selectedImage}
+                source={{uri:uploadedImageUrl || selectedImage}}
+                className="h-32 w-32 rounded-full"
+                resizeMode="cover"
+                />
+                )}
+                <Text className="text-base font-poppins-medium text-gray-200">
+                  Preview
+                </Text>
+              </View>
+              {!uploadedImageUrl?(
+                <View className="space-y-4">
+                  <Text className="text-lg font-poppins-semibold text-gray-700">
+                    Ready to upload your photo?
+                  </Text>
+                  <TouchableOpacity
+                  className="py-3 bg-blue-600 rounded-xl"
+                  onPress={()=>selectedImage && uploadImage(selectedImage)}
+                  disabled={isUploading}
+                  >
+                    <Text className="text-center font-poppins-semibold bg-white">
+                      {isUploading ? "Uploading..." : "Upload Photo"}
+
+                    </Text>
+                  </TouchableOpacity>
+                  </View>
+              ):(
+                <View>
+                  </View>
+              )}
+            </View>
+          )}
+        </ScrollView>
+        </SafeAreaView> 
+      </Modal>
+  )
   return (
     <SafeAreaView edges={["bottom"]} className="flex-1 pt-12 bg-white">
       <StatusBar barStyle={"dark-content"} backgroundColor={"#ffffff"} />
