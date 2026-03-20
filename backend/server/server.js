@@ -4,7 +4,7 @@ import { applyMiddleware } from "./middlewares/index.js";
 import { connectToDatabase } from "./database/dbconnection.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import router from "./routes/authRoutes.js";
-import {User} from "./models/userModel.js"
+import { User } from "./models/userModel.js";
 
 dotenv.config();
 
@@ -15,24 +15,21 @@ app.use(express.json({ limit: "10mb" }));
 app.use("/auth/api", router);
 app.use(errorMiddleware);
 
-
 setInterval(async () => {
   const now = Date.now();
   await User.updateMany(
     {
       otpExpires: { $lte: now },
-      otp: { $exists: true }
+      otp: { $exists: true },
     },
     {
       $unset: {
         otp: "",
-        otpExpires: ""
-      }
-    }
+        otpExpires: "",
+      },
+    },
   );
 }, 60 * 1000);
-
-
 
 const startServer = async () => {
   try {

@@ -245,6 +245,17 @@ const Profile = () => {
                     Enhance your photo with AI
                   </Text>
                   <View className="gap-3">
+                    <TouchableOpacity
+                    className={`flex-row items-center p-3 border rounded-xl ${
+                      appliedFeatures.includes("bg-remove")?
+                      "border-purple-300 vg-purple-50"
+                      :"border-gray-200"
+                    }`}
+                    onPress={()=>applyAIFeature("bg-remove")}
+                    disabled={isApplyingAI}
+                    >
+                      
+                    </TouchableOpacity>
                     </View>
                   </View>
               )}
