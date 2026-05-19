@@ -9,7 +9,6 @@ import { Ionicons } from "@expo/vector-icons";
 
 const TabLayout = () => {
   const colorScheme = useColorScheme();
-  const theme = Colors[colorScheme ?? "light"];
 
   return (
     <Tabs
@@ -18,7 +17,8 @@ const TabLayout = () => {
         tabBarActiveTintColor: "#3B82F6",
         tabBarInactiveTintColor: "#a8a8a8",
         tabBarButton: HapticTab,
-        tabBarBackground: () => <BlurTabBarBackground />,
+        tabBarBackground: () => <BlurTabBarBackground 
+        />,
 
         tabBarStyle: {
           height: 65,
@@ -37,7 +37,7 @@ const TabLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="Home"
         options={{
           title: "Home",
           tabBarIcon: ({ color, size, focused }) => (
@@ -51,7 +51,7 @@ const TabLayout = () => {
       />
 
       <Tabs.Screen
-        name="wishlist"
+        name="Wishlist"
         options={{
           title: "Wishlist",
           tabBarIcon: ({ color, size, focused }) => (
@@ -65,7 +65,7 @@ const TabLayout = () => {
       />
 
       <Tabs.Screen
-        name="messages"
+        name="Messages"
         options={{
           title: "Messages",
           tabBarIcon: ({ color, size, focused }) => (

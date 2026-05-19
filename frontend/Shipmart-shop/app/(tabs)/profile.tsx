@@ -93,7 +93,7 @@ const Profile = () => {
       icon: "mail-outline",
       iconColor: "#059669",
       iconBg: "#D1FAE5",
-      onPress: () => router.push("/(tabs)/messages"),
+      onPress: () => router.push("/(tabs)/Messages"),
     },
     {
       id: "notifications",
@@ -266,7 +266,7 @@ const Profile = () => {
       </Modal>
   )
   return (
-    <SafeAreaView edges={["bottom"]} className="flex-1 pt-12 bg-white">
+    <SafeAreaView edges={["bottom"]} className="flex-1 bg-white">
       <StatusBar barStyle={"dark-content"} backgroundColor={"#ffffff"} />
       {/* Header */}
 

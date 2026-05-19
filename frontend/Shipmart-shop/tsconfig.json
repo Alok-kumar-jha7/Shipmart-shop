@@ -10,9 +10,11 @@
   },
   "include": [
     "**/*.ts",
+    "**/*.js",
+    "**/*.jsx",
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
-, "app/(routes)/Signup-Otp.tsx"  ]
+, "app/(routes)/Signup-Otp.tsx", "app/(tabs)/cart.tsx", "app/(tabs)/Home.tsx", "app/(tabs)/Messages.tsx"  ]
 }
